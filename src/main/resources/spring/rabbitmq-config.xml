@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	 xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    	  http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd">
+
+	<!--<context:property-placeholder location="classpath*:conf-*.properties" />-->
+	
+	<!-- 扫描注解Bean -->
+	<!--<context:component-scan base-package="com.lyc.service,com.lyc.controller" />-->
+	<!-- ========================================RabbitMQ========================================= -->
+	<rabbit:connection-factory id="connectionFactory"
+							   host="localhost"
+							   username="guest"
+							   password="guest" />
+	<!--连接工厂-->
+	<rabbit:template id="rabbitTemplate" connection-factory="connectionFactory"/>
+
+	<!-- 监听器 -->
+	<rabbit:listener-container connection-factory="connectionFactory">
+		<!-- queues是队列名称，可填多个，用逗号隔开， method是ref指定的Bean调用Invoke方法执行的方法名称 -->
+		<rabbit:listener queues="red" method="onMessage" ref="QueueListener1" />
+		<rabbit:listener queues="blue" method="onMessage" ref="QueueListener2" />
+	</rabbit:listener-container>
+	<!-- 队列声明 -->
+	<rabbit:queue name="red" durable="true" />
+	<!-- 队列声明 -->
+	<rabbit:queue name="blue" durable="true" />
+	<!-- 红色监听处理器 -->
+	<bean id="QueueListener1" class="com.lyc.listener.rabbitmq.QueueListener1" />
+	<!-- 颜色监听处理器 -->
+	<bean id="QueueListener2" class="com.lyc.listener.rabbitmq.QueueListener2" />
+	
+</beans>

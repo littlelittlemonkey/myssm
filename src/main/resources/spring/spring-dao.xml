@@ -65,5 +65,6 @@
     <bean id="wall-config" class="com.alibaba.druid.wall.WallConfig">
         <property name="multiStatementAllow" value="true" />
     </bean>
+    <import resource="rabbitmq-config.xml"/>
 
 </beans>
