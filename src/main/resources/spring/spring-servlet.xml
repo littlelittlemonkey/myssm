@@ -7,7 +7,32 @@
 
     <context:annotation-config />
     <!-- 启动注解驱动的spring mvc 功能 -->
-    <mvc:annotation-driven/>
+    <!--<mvc:annotation-driven/>-->
+
+    <!--自定义拦截器-->
+    <!--拦截器的执行顺序和定义顺序有关-->
+    <mvc:interceptors>
+        <!-- 配置自定义的拦截器 FirstInterceptor -->
+        <mvc:interceptor>
+            <!-- 配置拦截器作用的路径 -->
+            <mvc:mapping path="/user/**" />
+            <bean class="com.lyc.interceptor.FirstInterceptor"></bean>
+            <!-- 若要配置不起作用的路径，则使用 <mvc:exclude-mapping path=""/> -->
+        </mvc:interceptor>
+        <!-- 配置自定义的拦截器 SecondInterceptor -->
+        <mvc:interceptor>
+            <!-- 配置拦截器作用的路径 -->
+            <mvc:mapping path="/user/**" />
+            <bean class="com.lyc.interceptor.SecondInterceptor"></bean>
+            <!-- 若要配置不起作用的路径，则使用 <mvc:exclude-mapping path=""/> -->
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
 
     <!-- 启动包扫描功能 -->
     <context:component-scan base-package="com.lyc.controller" />
